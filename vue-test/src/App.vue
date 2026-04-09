@@ -75,12 +75,14 @@ const isEmpty = quality === 0;
         </h2>
         <h2 v-else>Ничего не найдено...</h2>
         <TransitionGroup name="todo" tag="div">
+        <div class="newTodos__group">
           <Todoitem
             v-for="todo in newTodos"
             :key="todo.id"
             :todo="todo"
             @deleteTodo="deleteTodo"
           />
+          </div>
         </TransitionGroup>
       </div>
       <div class="todo_done">
@@ -89,6 +91,7 @@ const isEmpty = quality === 0;
         </h2>
         <h2 v-else>Ничего не найдено...</h2>
         <TransitionGroup name="todo" tag="div">
+          <div class="doneTodos_group">
           <Todoitem
             v-for="todo in doneTodos"
             :key="todo.id"
@@ -96,6 +99,7 @@ const isEmpty = quality === 0;
             @deleteTodo="deleteTodo"
             class="doneTodos__list"
           />
+          </div>
         </TransitionGroup>
       </div>
     </div>
@@ -107,7 +111,7 @@ const isEmpty = quality === 0;
   display: flex;
   justify-content: center;
   align-items: space-between;
-  gap: 15px;
+  gap: 30px;
   flex-direction: column;
 }
 .doneTodos__list {
@@ -136,9 +140,15 @@ h2 {
   font-weight: 400;
   line-height: 19px;
 }
-.todo-enter-active,
+.todo-enter-active,ј
 .todo-leave-active,
 .todo-move {
   transition-duration: 0.5s;
+}
+.newTodos__group,
+.doneTodos_group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 </style>
