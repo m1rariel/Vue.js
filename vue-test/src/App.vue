@@ -74,26 +74,29 @@ const isEmpty = quality === 0;
           Task to do - {{ newTodos.length }}
         </h2>
         <h2 v-else>Ничего не найдено...</h2>
-        <Todoitem
-          v-for="todo in newTodos"
-          :key="todo.id"
-          :todo="todo"
-          @deleteTodo="deleteTodo"
-        />
+        <TransitionGroup name="todo" tag="div">
+          <Todoitem
+            v-for="todo in newTodos"
+            :key="todo.id"
+            :todo="todo"
+            @deleteTodo="deleteTodo"
+          />
+        </TransitionGroup>
       </div>
-
       <div class="todo_done">
         <h2 v-if="doneTodos.length > 0" class="h2_todo_done__title">
           Done - {{ doneTodos.length }}
         </h2>
         <h2 v-else>Ничего не найдено...</h2>
-        <Todoitem
-          v-for="todo in doneTodos"
-          :key="todo.id"
-          :todo="todo"
-          @deleteTodo="deleteTodo"
-          class="doneTodos__list"
-        />
+        <TransitionGroup name="todo" tag="div">
+          <Todoitem
+            v-for="todo in doneTodos"
+            :key="todo.id"
+            :todo="todo"
+            @deleteTodo="deleteTodo"
+            class="doneTodos__list"
+          />
+        </TransitionGroup>
       </div>
     </div>
   </main>
@@ -132,5 +135,10 @@ h2 {
   font-size: 16px;
   font-weight: 400;
   line-height: 19px;
+}
+.todo-enter-active,
+.todo-leave-active,
+.todo-move {
+  transition-duration: 0.5s;
 }
 </style>
