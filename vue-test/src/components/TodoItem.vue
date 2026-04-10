@@ -93,7 +93,7 @@ const onTodoDelete = () => {
   justify-content: center;
   align-items: center;
   background: transparent;
-  border-radius: 50%;
+  border-radius: 49%;
 }
 
 .todo-item__checkbox-control :deep(svg) {
