@@ -1,4 +1,7 @@
 <script setup>
+import IconDone from "./icons/IconDone.vue";
+import IconTrash from "./icons/IconTrash.vue";
+
 const props = defineProps({
   todo: {
     type: Object,
@@ -13,37 +16,31 @@ const onTodoDelete = () => {
 </script>
 
 <template>
-  <div class="todo_content">
+  <div class="todo-item">
     <h2
       :class="[
-        'todo_content__title',
-        { todo_content__title_done: todo.completed },
+        'todo-item__title',
+        { 'todo-item__title--done': todo.completed },
       ]"
     >
       {{ todo.title }}
     </h2>
-    <div class="todo_content_checkstatus">
-      <label class="todo_checkbox">
+    <div class="todo-item__actions">
+      <label class="todo-item__checkbox">
         <input v-model="todo.completed" type="checkbox" />
-        <span class="todo_checkbox__custom">
-          <img
-            v-if="todo.completed"
-            src="./icons/done.svg"
-            alt="Done todo"
-            width="14"
-            height="14"
-          />
+        <span class="todo-item__checkbox-control">
+          <IconDone />
         </span>
       </label>
-      <button class="todo_delete_button" @click="onTodoDelete">
-        <img src="../icons/TrashSimple.svg" alt="trash icon" />
+      <button class="todo-item__delete-button" @click="onTodoDelete">
+        <IconTrash />
       </button>
     </div>
   </div>
 </template>
 
 <style scoped>
-.todo_content {
+.todo-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -52,13 +49,12 @@ const onTodoDelete = () => {
   min-height: 75px;
   box-sizing: border-box;
   padding: 22px;
-  border: 1px solid rgba(158, 120, 207, 1);
   border-radius: 10px;
   background: rgba(21, 16, 28, 1);
   gap: 15px;
 }
 
-.todo_content__title {
+.todo-item__title {
   margin: 0;
   color: rgba(158, 120, 207, 1);
   font-family: "Inter", sans-serif;
@@ -67,45 +63,46 @@ const onTodoDelete = () => {
   line-height: 1.2;
 }
 
-.todo_content__title_done {
+.todo-item__title--done {
   color: rgba(120, 207, 176, 1);
   text-decoration: line-through;
 }
 
-.todo_content_checkstatus {
+.todo-item__actions {
   display: flex;
   align-items: center;
   gap: 18px;
 }
 
-.todo_checkbox {
+.todo-item__checkbox {
   display: inline-flex;
   align-items: center;
   cursor: pointer;
+  justify-content: center;
+  padding: 10px;
 }
 
-.todo_checkbox input {
+.todo-item__checkbox input {
   display: none;
 }
 
-.todo_checkbox__custom {
+.todo-item__checkbox-control {
   width: 20px;
   height: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   background: transparent;
-  border: 1px solid white;
   border-radius: 50%;
 }
 
-.todo_checkbox__custom img {
+.todo-item__checkbox-control :deep(svg) {
   display: block;
   width: 17px;
   height: 12px;
 }
 
-.todo_delete_button {
+.todo-item__delete-button {
   border: 0;
   background: transparent;
   color: rgba(158, 120, 207, 1);
@@ -118,4 +115,9 @@ const onTodoDelete = () => {
   align-items: center;
 }
 
+.todo-item__delete-button :deep(svg) {
+  display: block;
+  width: 22px;
+  height: 22px;
+}
 </style>
