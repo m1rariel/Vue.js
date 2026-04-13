@@ -8,8 +8,10 @@ const props = defineProps({
     required: true,
   },
 });
-const emits = defineEmits([`deleteTodo`]);
-
+const emits = defineEmits([`deleteTodo`, `navigateToDetail`]);
+const onNavigateToDetail = (id) => {
+  emits(`navigateToDetail`, props.todo.id);
+};
 const onTodoDelete = () => {
   emits(`deleteTodo`, props.todo.id);
 };
@@ -17,14 +19,15 @@ const onTodoDelete = () => {
 
 <template>
   <div class="todo-item">
-    <h2
-      :class="[
-        'todo-item__title',
-        { 'todo-item__title--done': todo.completed },
-      ]"
+    <RouterLink
+      :to="{
+        path: `/todo/${todo.id}`,
+        query: { title: todo.title, id: todo.id, check: todo.completed.value },
+      }"
+      :class="'todo-item__title'"
     >
       {{ todo.title }}
-    </h2>
+    </RouterLink>
     <div class="todo-item__actions">
       <label class="todo-item__checkbox">
         <input v-model="todo.completed" type="checkbox" />
@@ -35,11 +38,21 @@ const onTodoDelete = () => {
       <button class="todo-item__delete-button" @click="onTodoDelete">
         <IconTrash />
       </button>
+      <button class="todo-item__next-button" @click="onNavigateToDetail">
+        ➡️
+      </button>
     </div>
   </div>
 </template>
 
 <style scoped>
+.todo-item__next-button {
+  margin-block: 0;
+    padding-block: 0;
+    background-color: transparent;
+    border: none;
+    font-size: 16px;
+}
 .todo-item {
   display: flex;
   justify-content: space-between;
@@ -61,6 +74,7 @@ const onTodoDelete = () => {
   font-size: 16px;
   font-weight: 400;
   line-height: 1.2;
+  text-decoration: none;
 }
 
 .todo-item__title--done {

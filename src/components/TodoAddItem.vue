@@ -86,5 +86,13 @@ const onAddTodo = () => {
   width: 24px;
   height: 24px;
 }
-
+.todo-form__button {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>
