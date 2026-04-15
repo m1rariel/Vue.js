@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from "vue";
 import IconDone from "./icons/IconDone.vue";
 import IconTrash from "./icons/IconTrash.vue";
 
@@ -8,23 +9,28 @@ const props = defineProps({
     required: true,
   },
 });
-const emits = defineEmits([`deleteTodo`]);
-
+const emits = defineEmits([`deleteTodo`, `navigateToDetail`]);
+const onNavigateToDetail = (id) => {
+  emits(`navigateToDetail`, props.todo.id);
+};
 const onTodoDelete = () => {
   emits(`deleteTodo`, props.todo.id);
 };
+const todoLink = computed(() => ({
+  path: `/todo/${props.todo.id}`,
+  query: {
+    title: props.todo.title,
+    id: props.todo.id,
+    check: props.todo.completed,
+  },
+}));
 </script>
 
 <template>
   <div class="todo-item">
-    <h2
-      :class="[
-        'todo-item__title',
-        { 'todo-item__title--done': todo.completed },
-      ]"
-    >
+    <RouterLink :to="todoLink" :class="'todo-item__title'">
       {{ todo.title }}
-    </h2>
+    </RouterLink>
     <div class="todo-item__actions">
       <label class="todo-item__checkbox">
         <input v-model="todo.completed" type="checkbox" />
@@ -35,11 +41,21 @@ const onTodoDelete = () => {
       <button class="todo-item__delete-button" @click="onTodoDelete">
         <IconTrash />
       </button>
+      <button class="todo-item__next-button" @click="onNavigateToDetail">
+        ➡️
+      </button>
     </div>
   </div>
 </template>
 
 <style scoped>
+.todo-item__next-button {
+  margin-block: 0;
+  padding-block: 0;
+  background-color: transparent;
+  border: none;
+  font-size: 16px;
+}
 .todo-item {
   display: flex;
   justify-content: space-between;
@@ -57,10 +73,10 @@ const onTodoDelete = () => {
 .todo-item__title {
   margin: 0;
   color: rgba(158, 120, 207, 1);
-  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-weight: 400;
   line-height: 1.2;
+  text-decoration: none;
 }
 
 .todo-item__title--done {
@@ -106,7 +122,6 @@ const onTodoDelete = () => {
   border: 0;
   background: transparent;
   color: rgba(158, 120, 207, 1);
-  font-family: "Inter", sans-serif;
   font-size: 16px;
   cursor: pointer;
   padding: 0;

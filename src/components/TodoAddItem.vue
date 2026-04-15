@@ -51,7 +51,6 @@ const onAddTodo = () => {
   padding: 10px 15px;
 
   color: rgba(119, 119, 119, 1);
-  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-weight: 400;
   line-height: 19px;
@@ -86,5 +85,13 @@ const onAddTodo = () => {
   width: 24px;
   height: 24px;
 }
-
+.todo-form__button {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>
