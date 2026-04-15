@@ -51,7 +51,6 @@ const onAddTodo = () => {
   padding: 10px 15px;
 
   color: rgba(119, 119, 119, 1);
-  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-weight: 400;
   line-height: 19px;

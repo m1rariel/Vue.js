@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from "vue";
 import IconDone from "./icons/IconDone.vue";
 import IconTrash from "./icons/IconTrash.vue";
 
@@ -15,17 +16,19 @@ const onNavigateToDetail = (id) => {
 const onTodoDelete = () => {
   emits(`deleteTodo`, props.todo.id);
 };
+const todoLink = computed(() => ({
+  path: `/todo/${props.todo.id}`,
+  query: {
+    title: props.todo.title,
+    id: props.todo.id,
+    check: props.todo.completed,
+  },
+}));
 </script>
 
 <template>
   <div class="todo-item">
-    <RouterLink
-      :to="{
-        path: `/todo/${todo.id}`,
-        query: { title: todo.title, id: todo.id, check: todo.completed.value },
-      }"
-      :class="'todo-item__title'"
-    >
+    <RouterLink :to="todoLink" :class="'todo-item__title'">
       {{ todo.title }}
     </RouterLink>
     <div class="todo-item__actions">
@@ -48,10 +51,10 @@ const onTodoDelete = () => {
 <style scoped>
 .todo-item__next-button {
   margin-block: 0;
-    padding-block: 0;
-    background-color: transparent;
-    border: none;
-    font-size: 16px;
+  padding-block: 0;
+  background-color: transparent;
+  border: none;
+  font-size: 16px;
 }
 .todo-item {
   display: flex;
@@ -70,7 +73,6 @@ const onTodoDelete = () => {
 .todo-item__title {
   margin: 0;
   color: rgba(158, 120, 207, 1);
-  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-weight: 400;
   line-height: 1.2;
@@ -120,7 +122,6 @@ const onTodoDelete = () => {
   border: 0;
   background: transparent;
   color: rgba(158, 120, 207, 1);
-  font-family: "Inter", sans-serif;
   font-size: 16px;
   cursor: pointer;
   padding: 0;
