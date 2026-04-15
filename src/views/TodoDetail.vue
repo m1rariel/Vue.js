@@ -13,10 +13,7 @@ const todo = computed(() => ({
 }));
 
 const todoCheck = computed(() => {
-  if (route.query.check === null || undefined || NaN) {
-    return `Не найдено :С`;
-  }
-  return route.query.check === `true` ? `Выполнено!` : `Работай дальше!`;
+  return route.query.check ? "Выполнено!" : "Работай дальше!";
 });
 </script>
 
