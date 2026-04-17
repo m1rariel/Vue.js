@@ -21,7 +21,7 @@ const todoLink = computed(() => ({
   query: {
     title: props.todo.title,
     id: props.todo.id,
-    check: props.todo.completed,
+    completed: props.todo.completed,
   },
 }));
 </script>

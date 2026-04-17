@@ -8,15 +8,15 @@ import IconTrash from "@/components/icons/IconTrash.vue";
 
 const route = useRoute();
 const todo = computed(() => ({
-  title: route.query.title || "Пусто :С",
-  id: route.query.id || "Не найдено :С",
-  checked: route.query.check || "Не найдено :С",
+  title: route.query.title,
+  id: route.query.id,
+  completed: route.query.completed,
 }));
 
 const todoCheck = computed(() => {
-  return route.query.check ? "Выполнено!" : "Работай дальше!";
+  return todo.completed;
 });
-
+console.log(todoCheck.value);
 const isLoading = ref(true);
 onMounted(() => {
   setTimeout(() => {
@@ -36,12 +36,11 @@ onMounted(() => {
         <li
           class="content-page__item-info"
           :class="{
-            'content-page-item--done': todoCheck === 'Выполнено!',
-            'content-page-item--todo':
-              todoCheck === 'Работай дальше!' || todoCheck === 'Не найдено :С',
+            'content-page-item--done': todo.completed === 'true',
+            'content-page-item--todo': todo.completed === 'false',
           }"
         >
-          Отметка о выполнении: {{ todo.checked }}
+          Отметка о выполнении: {{ todo.completed }}
         </li>
         <li class="content-page__item-info">ID задачи: {{ todo.id }}</li>
         <li class="content-page__item-info content-page__item-group">
@@ -163,7 +162,6 @@ onMounted(() => {
 .content-page-item--todo {
   color: red;
 }
-
 .content-page__container {
   width: 583px;
   padding: 25px;
