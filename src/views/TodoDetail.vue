@@ -1,7 +1,8 @@
 <script setup>
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import IconDone from "@/components/icons/IconDone.vue";
+import { ref } from "vue";
 
 import IconTrash from "@/components/icons/IconTrash.vue";
 
@@ -15,13 +16,21 @@ const todo = computed(() => ({
 const todoCheck = computed(() => {
   return route.query.check ? "Выполнено!" : "Работай дальше!";
 });
+
+const isLoading = ref(true);
+onMounted(() => {
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 2000);
+});
 </script>
 
 <template>
   <div class="content-page">
     <div class="content-page__container">
       <div class="content-page__header">
-        <h2 class="content-page__title">{{ todo.title }}</h2>
+        <h2 v-if="isLoading === true" class="loader"></h2>
+        <h2 v-else class="content-page__title">{{ todo.title }}</h2>
       </div>
       <ul class="content-page__list">
         <li
@@ -49,6 +58,105 @@ const todoCheck = computed(() => {
   </div>
 </template>
 <style scoped>
+.loader {
+  width: 70px;
+  height: 30px;
+  overflow: hidden;
+  position: relative;
+}
+.loader:before {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  inset: 0;
+  margin: auto;
+  background: white;
+  transform-origin: bottom;
+  animation: l10-1 3s infinite;
+}
+.loader:after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 14px;
+  bottom: calc(50% - 4px);
+  background: white;
+  animation: l10-2 3s infinite;
+}
+@keyframes l10-1 {
+  0%,
+  10% {
+    transform: translate(0) scale(1);
+    box-shadow:
+      60px 0,
+      60px 0;
+  }
+  20%,
+  40% {
+    transform: translate(20px) scale(1);
+    box-shadow:
+      60px 0,
+      60px 0;
+  }
+  48% {
+    transform: translate(20px) scale(1);
+    box-shadow:
+      8px 0,
+      60px 0;
+  }
+  50% {
+    transform: translate(20px) scale(1.5);
+    box-shadow:
+      0 0,
+      60px 0;
+  }
+  58% {
+    transform: translate(20px) scale(1.5);
+    box-shadow:
+      0 0,
+      8px 0;
+  }
+  60%,
+  70% {
+    transform: translate(20px) scale(2);
+    box-shadow:
+      0 0,
+      0 0;
+  }
+
+  85% {
+    transform: translate(-50px) scale(2);
+    box-shadow:
+      0 0,
+      0 0;
+  }
+  87% {
+    transform: translate(-50px) scale(1);
+    box-shadow:
+      0 0,
+      0 0;
+  }
+  100% {
+    transform: translate(0) scale(1);
+    box-shadow:
+      0 0,
+      0 0;
+  }
+}
+@keyframes l10-2 {
+  20%,
+  70% {
+    left: 50%;
+  }
+  0%,
+  10%,
+  85%,
+  100% {
+    left: -25px;
+  }
+}
 .content-page-item--done {
   color: green;
 }

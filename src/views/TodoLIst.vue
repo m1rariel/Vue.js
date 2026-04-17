@@ -1,8 +1,9 @@
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import Todoitem from "@/components/TodoItem.vue";
 import TodoAddItem from "@/components/TodoAddItem.vue";
 import { useRouter } from "vue-router";
+import { getTodos } from "@/api/todo/getTodos";
 
 const todos = ref([
   {
@@ -55,6 +56,13 @@ const router = useRouter();
 const navigateToDetail = (id) => {
   router.push({ path: `/todo/${id}` });
 };
+onMounted(async () => {
+  const rawTodos = await getTodos();
+  todos.value = rawTodos.map((todo) => ({
+    ...todo,
+    completed: false,
+  }));
+});
 </script>
 
 <template>
