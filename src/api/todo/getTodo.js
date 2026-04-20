@@ -1,11 +1,9 @@
 import { useAxios } from "../useAxios";
 
-export const getTodos = async () => {
+export const getTodo = async (id) => {
   const axiosInstance = useAxios();
   try {
-    const response = await axiosInstance.get("/todos", {
-      params: { _limit: 10 },
-    });
+    const response = await axiosInstance.get(`/todos/${id}`);
     return response.data;
   } catch (e) {
     console.error("Error", e);

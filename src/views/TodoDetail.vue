@@ -1,48 +1,49 @@
 <script setup>
-import { computed, onMounted } from "vue";
+import { computed, onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
 import IconDone from "@/components/icons/IconDone.vue";
 import { ref } from "vue";
-
+import { getTodo } from "@/api/todo/getTodo";
 import IconTrash from "@/components/icons/IconTrash.vue";
 
 const route = useRoute();
-const todo = computed(() => ({
-  title: route.query.title,
-  id: route.query.id,
-  completed: route.query.completed,
-}));
 
-const todoCheck = computed(() => {
-  return todo.completed;
-});
-console.log(todoCheck.value);
+const todo = ref(null);
 const isLoading = ref(true);
-onMounted(() => {
-  setTimeout(() => {
+onMounted(async () => {
+  try {
+    todo.value = await getTodo(route.params.id);
+  } catch {
+    console.error(`Error!`);
+  } finally {
     isLoading.value = false;
-  }, 2000);
+  }
 });
+
+console.log(isLoading.value);
 </script>
 
 <template>
   <div class="content-page">
     <div class="content-page__container">
       <div class="content-page__header">
-        <h2 v-if="isLoading === true" class="loader"></h2>
+        <h2 v-if="isLoading" class="loader"></h2>
         <h2 v-else class="content-page__title">{{ todo.title }}</h2>
       </div>
       <ul class="content-page__list">
         <li
+          v-if="todo"
           class="content-page__item-info"
           :class="{
-            'content-page-item--done': todo.completed === 'true',
-            'content-page-item--todo': todo.completed === 'false',
+            'content-page-item--done': todo.completed,
+            'content-page-item--todo': !todo.completed,
           }"
         >
           Отметка о выполнении: {{ todo.completed }}
         </li>
-        <li class="content-page__item-info">ID задачи: {{ todo.id }}</li>
+        <li v-if="todo" class="content-page__item-info">
+          ID задачи: {{ todo.id }}
+        </li>
         <li class="content-page__item-info content-page__item-group">
           <RouterLink to="/todo"> ⬅️ </RouterLink>
           <button class="content-page__done-button">
