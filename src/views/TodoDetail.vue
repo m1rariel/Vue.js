@@ -13,14 +13,12 @@ const isLoading = ref(true);
 onMounted(async () => {
   try {
     todo.value = await getTodo(route.params.id);
-  } catch {
-    console.error(`Error!`);
+  } catch (error) {
+    console.error("Error!", error);
   } finally {
     isLoading.value = false;
   }
 });
-
-console.log(isLoading.value);
 </script>
 
 <template>
@@ -31,19 +29,18 @@ console.log(isLoading.value);
         <h2 v-else class="content-page__title">{{ todo.title }}</h2>
       </div>
       <ul class="content-page__list">
-        <li
-          v-if="todo"
-          class="content-page__item-info"
-          :class="{
-            'content-page-item--done': todo.completed,
-            'content-page-item--todo': !todo.completed,
-          }"
-        >
-          Отметка о выполнении: {{ todo.completed }}
-        </li>
-        <li v-if="todo" class="content-page__item-info">
-          ID задачи: {{ todo.id }}
-        </li>
+        <template v-if="todo">
+          <li
+            class="content-page__item-info"
+            :class="{
+              'content-page-item--done': todo.completed,
+              'content-page-item--todo': !todo.completed,
+            }"
+          >
+            Отметка о выполнении: {{ todo.completed }}
+          </li>
+          <li class="content-page__item-info">ID задачи: {{ todo.id }}</li>
+        </template>
         <li class="content-page__item-info content-page__item-group">
           <RouterLink to="/todo"> ⬅️ </RouterLink>
           <button class="content-page__done-button">

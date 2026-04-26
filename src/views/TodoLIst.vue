@@ -37,8 +37,8 @@ onMounted(async () => {
       ...todo,
       completed: false,
     }));
-  } catch {
-    console.error(`Error!`);
+  } catch (error) {
+    console.error("Error!!!", error);
   } finally {
     isLoading.value = false;
   }
