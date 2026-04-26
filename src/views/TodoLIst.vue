@@ -1,37 +1,12 @@
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import Todoitem from "@/components/TodoItem.vue";
 import TodoAddItem from "@/components/TodoAddItem.vue";
 import { useRouter } from "vue-router";
+import { getTodos } from "@/api/todo/getTodos";
 
-const todos = ref([
-  {
-    id: 1,
-    title: "Купить хлеб и изучить Vue.js",
-    completed: false,
-  },
-  {
-    id: 2,
-    title: "Купить хлеб и изучить Vue.js",
-    completed: false,
-  },
-  {
-    id: 3,
-    title: "Купить хлеб и изучить Vue.js",
-    completed: false,
-  },
-  {
-    id: 4,
-    title: "Купить хлеб и изучить Vue.js",
-    completed: false,
-  },
-  {
-    id: 5,
-    title: "To study React fundamentals",
-    completed: true,
-  },
-]);
-
+const todos = ref([]);
+const isLoading = ref(true);
 const deleteTodo = (id) => {
   todos.value = todos.value.filter((todo) => todo.id !== id);
 };
@@ -55,11 +30,25 @@ const router = useRouter();
 const navigateToDetail = (id) => {
   router.push({ path: `/todo/${id}` });
 };
+onMounted(async () => {
+  try {
+    const rawTodos = await getTodos();
+    todos.value = rawTodos.map((todo) => ({
+      ...todo,
+      completed: false,
+    }));
+  } catch (error) {
+    console.error("Error!!!", error);
+  } finally {
+    isLoading.value = false;
+  }
+});
 </script>
 
 <template>
   <div class="todo-page">
-    <div class="todo-page__container">
+    <h2 v-if="isLoading" class="loader"></h2>
+    <div v-else class="todo-page__container">
       <TodoAddItem @addTodo="addTodo" />
       <section class="todo-section">
         <h2 v-if="newTodos.length > 0" class="todo-section__title">
@@ -98,6 +87,106 @@ const navigateToDetail = (id) => {
 </template>
 
 <style scoped>
+.loader {
+  width: 70px;
+  height: 30px;
+  overflow: hidden;
+  position: relative;
+  margin: 0;
+}
+.loader:before {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  inset: 0;
+  margin: auto;
+  background: white;
+  transform-origin: bottom;
+  animation: l10-1 3s infinite;
+}
+.loader:after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 14px;
+  bottom: calc(50% - 4px);
+  background: white;
+  animation: l10-2 3s infinite;
+}
+@keyframes l10-1 {
+  0%,
+  10% {
+    transform: translate(0) scale(1);
+    box-shadow:
+      60px 0,
+      60px 0;
+  }
+  20%,
+  40% {
+    transform: translate(20px) scale(1);
+    box-shadow:
+      60px 0,
+      60px 0;
+  }
+  48% {
+    transform: translate(20px) scale(1);
+    box-shadow:
+      8px 0,
+      60px 0;
+  }
+  50% {
+    transform: translate(20px) scale(1.5);
+    box-shadow:
+      0 0,
+      60px 0;
+  }
+  58% {
+    transform: translate(20px) scale(1.5);
+    box-shadow:
+      0 0,
+      8px 0;
+  }
+  60%,
+  70% {
+    transform: translate(20px) scale(2);
+    box-shadow:
+      0 0,
+      0 0;
+  }
+
+  85% {
+    transform: translate(-50px) scale(2);
+    box-shadow:
+      0 0,
+      0 0;
+  }
+  87% {
+    transform: translate(-50px) scale(1);
+    box-shadow:
+      0 0,
+      0 0;
+  }
+  100% {
+    transform: translate(0) scale(1);
+    box-shadow:
+      0 0,
+      0 0;
+  }
+}
+@keyframes l10-2 {
+  20%,
+  70% {
+    left: 50%;
+  }
+  0%,
+  10%,
+  85%,
+  100% {
+    left: -25px;
+  }
+}
 .todo-page {
   display: flex;
   justify-content: center;

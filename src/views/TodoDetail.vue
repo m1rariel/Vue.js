@@ -1,19 +1,23 @@
 <script setup>
-import { computed } from "vue";
+import { computed, onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
 import IconDone from "@/components/icons/IconDone.vue";
-
+import { ref } from "vue";
+import { getTodo } from "@/api/todo/getTodo";
 import IconTrash from "@/components/icons/IconTrash.vue";
 
 const route = useRoute();
-const todo = computed(() => ({
-  title: route.query.title || "Пусто :С",
-  id: route.query.id || "Не найдено :С",
-  checked: route.query.check || "Не найдено :С",
-}));
 
-const todoCheck = computed(() => {
-  return route.query.check ? "Выполнено!" : "Работай дальше!";
+const todo = ref(null);
+const isLoading = ref(true);
+onMounted(async () => {
+  try {
+    todo.value = await getTodo(route.params.id);
+  } catch (error) {
+    console.error("Error!", error);
+  } finally {
+    isLoading.value = false;
+  }
 });
 </script>
 
@@ -21,20 +25,22 @@ const todoCheck = computed(() => {
   <div class="content-page">
     <div class="content-page__container">
       <div class="content-page__header">
-        <h2 class="content-page__title">{{ todo.title }}</h2>
+        <h2 v-if="isLoading" class="loader"></h2>
+        <h2 v-else class="content-page__title">{{ todo.title }}</h2>
       </div>
       <ul class="content-page__list">
-        <li
-          class="content-page__item-info"
-          :class="{
-            'content-page-item--done': todoCheck === 'Выполнено!',
-            'content-page-item--todo':
-              todoCheck === 'Работай дальше!' || todoCheck === 'Не найдено :С',
-          }"
-        >
-          Отметка о выполнении: {{ todo.checked }}
-        </li>
-        <li class="content-page__item-info">ID задачи: {{ todo.id }}</li>
+        <template v-if="todo">
+          <li
+            class="content-page__item-info"
+            :class="{
+              'content-page-item--done': todo.completed,
+              'content-page-item--todo': !todo.completed,
+            }"
+          >
+            Отметка о выполнении: {{ todo.completed }}
+          </li>
+          <li class="content-page__item-info">ID задачи: {{ todo.id }}</li>
+        </template>
         <li class="content-page__item-info content-page__item-group">
           <RouterLink to="/todo"> ⬅️ </RouterLink>
           <button class="content-page__done-button">
@@ -49,13 +55,111 @@ const todoCheck = computed(() => {
   </div>
 </template>
 <style scoped>
+.loader {
+  width: 70px;
+  height: 30px;
+  overflow: hidden;
+  position: relative;
+}
+.loader:before {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  inset: 0;
+  margin: auto;
+  background: white;
+  transform-origin: bottom;
+  animation: l10-1 3s infinite;
+}
+.loader:after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 14px;
+  bottom: calc(50% - 4px);
+  background: white;
+  animation: l10-2 3s infinite;
+}
+@keyframes l10-1 {
+  0%,
+  10% {
+    transform: translate(0) scale(1);
+    box-shadow:
+      60px 0,
+      60px 0;
+  }
+  20%,
+  40% {
+    transform: translate(20px) scale(1);
+    box-shadow:
+      60px 0,
+      60px 0;
+  }
+  48% {
+    transform: translate(20px) scale(1);
+    box-shadow:
+      8px 0,
+      60px 0;
+  }
+  50% {
+    transform: translate(20px) scale(1.5);
+    box-shadow:
+      0 0,
+      60px 0;
+  }
+  58% {
+    transform: translate(20px) scale(1.5);
+    box-shadow:
+      0 0,
+      8px 0;
+  }
+  60%,
+  70% {
+    transform: translate(20px) scale(2);
+    box-shadow:
+      0 0,
+      0 0;
+  }
+
+  85% {
+    transform: translate(-50px) scale(2);
+    box-shadow:
+      0 0,
+      0 0;
+  }
+  87% {
+    transform: translate(-50px) scale(1);
+    box-shadow:
+      0 0,
+      0 0;
+  }
+  100% {
+    transform: translate(0) scale(1);
+    box-shadow:
+      0 0,
+      0 0;
+  }
+}
+@keyframes l10-2 {
+  20%,
+  70% {
+    left: 50%;
+  }
+  0%,
+  10%,
+  85%,
+  100% {
+    left: -25px;
+  }
+}
 .content-page-item--done {
   color: green;
 }
 .content-page-item--todo {
   color: red;
 }
-
 .content-page__container {
   width: 583px;
   padding: 25px;
