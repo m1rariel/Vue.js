@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import IconDone from "./icons/IconDone.vue";
 import IconTrash from "./icons/IconTrash.vue";
+import { useTodosStore } from "@/store/todosStore";
 
 const props = defineProps({
   todo: {
@@ -9,13 +10,13 @@ const props = defineProps({
     required: true,
   },
 });
-const emits = defineEmits([`deleteTodo`, `navigateToDetail`]);
+const emits = defineEmits([`navigateToDetail`]);
 const onNavigateToDetail = (id) => {
   emits(`navigateToDetail`, props.todo.id);
 };
-const onTodoDelete = () => {
-  emits(`deleteTodo`, props.todo.id);
-};
+
+const todosStore = useTodosStore();
+
 const todoLink = computed(() => ({
   path: `/todo/${props.todo.id}`,
   query: {
@@ -38,7 +39,10 @@ const todoLink = computed(() => ({
           <IconDone />
         </span>
       </label>
-      <button class="todo-item__delete-button" @click="onTodoDelete">
+      <button
+        class="todo-item__delete-button"
+        @click="todosStore.deleteTodo(todo.id)"
+      >
         <IconTrash />
       </button>
       <button class="todo-item__next-button" @click="onNavigateToDetail">

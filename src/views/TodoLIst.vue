@@ -3,53 +3,33 @@ import { computed, onMounted, ref, watch } from "vue";
 import Todoitem from "@/components/TodoItem.vue";
 import TodoAddItem from "@/components/TodoAddItem.vue";
 import { useRouter } from "vue-router";
-import { getTodos } from "@/api/todo/getTodos";
+import { useSmallWidth } from "@/composables/useWidth";
+import { useTodosStore } from "@/store/todosStore";
+import { storeToRefs } from "pinia";
 
-const todos = ref([]);
-const isLoading = ref(true);
-const deleteTodo = (id) => {
-  todos.value = todos.value.filter((todo) => todo.id !== id);
-};
+const todosStore = useTodosStore();
+const { isLoading, newTodos, doneTodos } = storeToRefs(todosStore);
 
-const doneTodos = computed(() => {
-  return todos.value.filter((todo) => todo.completed);
-});
-
-const newTodos = computed(() => {
-  return todos.value.filter((todo) => !todo.completed);
-});
-
-const addTodo = (title) => {
-  todos.value.push({
-    id: Date.now(),
-    title,
-    completed: false,
-  });
-};
 const router = useRouter();
+
 const navigateToDetail = (id) => {
   router.push({ path: `/todo/${id}` });
 };
-onMounted(async () => {
-  try {
-    const rawTodos = await getTodos();
-    todos.value = rawTodos.map((todo) => ({
-      ...todo,
-      completed: false,
-    }));
-  } catch (error) {
-    console.error("Error!!!", error);
-  } finally {
-    isLoading.value = false;
-  }
+onMounted(() => {
+  todosStore.claimTodos();
 });
+
+const isSmallWidth = useSmallWidth();
 </script>
 
 <template>
-  <div class="todo-page">
+  <div v-if="isSmallWidth" class="todo-page__noticed">
+    <p>Sorry, to small :c</p>
+  </div>
+  <div v-else class="todo-page">
     <h2 v-if="isLoading" class="loader"></h2>
     <div v-else class="todo-page__container">
-      <TodoAddItem @addTodo="addTodo" />
+      <TodoAddItem />
       <section class="todo-section">
         <h2 v-if="newTodos.length > 0" class="todo-section__title">
           Task to do - {{ newTodos.length }}
@@ -60,7 +40,7 @@ onMounted(async () => {
             v-for="todo in newTodos"
             :key="todo.id"
             :todo="todo"
-            @deleteTodo="deleteTodo"
+            @deleteTodo="todosStore.deleteTodo"
             @navigateToDetail="navigateToDetail"
           />
         </TransitionGroup>
@@ -76,7 +56,7 @@ onMounted(async () => {
             v-for="todo in doneTodos"
             :key="todo.id"
             :todo="todo"
-            @deleteTodo="deleteTodo"
+            @deleteTodo="todosStore.deleteTodo"
             @navigateToDetail="navigateToDetail"
             class="todo-section__item--completed"
           />
@@ -87,6 +67,10 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+.todo-page__noticed {
+  color: red;
+  font-size: 48px;
+}
 .loader {
   width: 70px;
   height: 30px;
