@@ -1,23 +1,18 @@
 <script setup>
-import { computed, onMounted, reactive } from "vue";
+import { onMounted } from "vue";
+import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
 import IconDone from "@/components/icons/IconDone.vue";
-import { ref } from "vue";
-import { getTodo } from "@/api/todo/getTodo";
 import IconTrash from "@/components/icons/IconTrash.vue";
+import { useTodosStore } from "@/store/todosStore";
 
 const route = useRoute();
+const todosStore = useTodosStore();
+const { currentTodo: todo, isDetailLoading: isLoading } =
+  storeToRefs(todosStore);
 
-const todo = ref(null);
-const isLoading = ref(true);
-onMounted(async () => {
-  try {
-    todo.value = await getTodo(route.params.id);
-  } catch (error) {
-    console.error("Error!", error);
-  } finally {
-    isLoading.value = false;
-  }
+onMounted(() => {
+  todosStore.claimOneTodo(route.params.id);
 });
 </script>
 
@@ -26,7 +21,8 @@ onMounted(async () => {
     <div class="content-page__container">
       <div class="content-page__header">
         <h2 v-if="isLoading" class="loader"></h2>
-        <h2 v-else class="content-page__title">{{ todo.title }}</h2>
+        <h2 v-else-if="todo" class="content-page__title">{{ todo.title }}</h2>
+        <h2 v-else class="content-page__title">Задачи нет :с</h2>
       </div>
       <ul class="content-page__list">
         <template v-if="todo">
