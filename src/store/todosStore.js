@@ -8,6 +8,7 @@ export const useTodosStore = defineStore("todos", () => {
   const isLoading = ref(true);
   const currentTodo = ref(null);
   const isDetailLoading = ref(true);
+  
   function addTodo(title) {
     todos.value.push({
       id: Date.now(),
@@ -15,8 +16,10 @@ export const useTodosStore = defineStore("todos", () => {
       completed: false,
     });
   }
-  async function claimTodos() {
+
+  async function fetchTodos() {
     isLoading.value = true;
+
     try {
       const rawTodos = await getTodos();
       todos.value = rawTodos.map((todo) => ({
@@ -29,8 +32,10 @@ export const useTodosStore = defineStore("todos", () => {
       isLoading.value = false;
     }
   }
-  async function claimOneTodo(id) {
+
+  async function fetchOneTodo(id) {
     isDetailLoading.value = true;
+
     try {
       currentTodo.value = await getTodo(id);
     } catch (error) {
@@ -40,10 +45,10 @@ export const useTodosStore = defineStore("todos", () => {
       isDetailLoading.value = false;
     }
   }
+
   const doneTodos = computed(() => {
     return todos.value.filter((todo) => todo.completed);
   });
-
   const newTodos = computed(() => {
     return todos.value.filter((todo) => !todo.completed);
   });
@@ -54,13 +59,13 @@ export const useTodosStore = defineStore("todos", () => {
 
   return {
     addTodo,
-    claimTodos,
+    fetchTodos,
     doneTodos,
     newTodos,
     deleteTodo,
     isLoading,
     currentTodo,
     isDetailLoading,
-    claimOneTodo,
+    fetchOneTodo,
   };
 });

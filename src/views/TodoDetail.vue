@@ -12,7 +12,7 @@ const { currentTodo: todo, isDetailLoading: isLoading } =
   storeToRefs(todosStore);
 
 onMounted(() => {
-  todosStore.claimOneTodo(route.params.id);
+  todosStore.fetchOneTodo(route.params.id);
 });
 </script>
 

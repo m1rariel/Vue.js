@@ -16,7 +16,7 @@ const navigateToDetail = (id) => {
   router.push({ path: `/todo/${id}` });
 };
 onMounted(() => {
-  todosStore.claimTodos();
+  todosStore.fetchTodos();
 });
 
 const isSmallWidth = useSmallWidth();
@@ -181,7 +181,7 @@ const isSmallWidth = useSmallWidth();
   padding: 65px;
   background: #1d1825;
   border-radius: 25px;
-  margin-top: 100px;
+  margin-block: 100px;
 }
 
 .todo-section {

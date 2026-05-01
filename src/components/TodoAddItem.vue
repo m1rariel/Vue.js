@@ -5,6 +5,7 @@ import { useTodosStore } from "@/store/todosStore";
 
 const emits = defineEmits([`addTodo`]);
 const title = ref(``);
+const todosStore = useTodosStore();
 
 const onAddTodo = () => {
   const value = title.value.trim();
@@ -14,7 +15,6 @@ const onAddTodo = () => {
   title.value = "";
 };
 
-const todosStore = useTodosStore();
 </script>
 
 <template>
