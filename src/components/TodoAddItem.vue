@@ -1,16 +1,20 @@
 <script setup>
 import { ref } from "vue";
 import IconPlus from "./icons/IconPlus.vue";
+import { useTodosStore } from "@/store/todosStore";
 
 const emits = defineEmits([`addTodo`]);
 const title = ref(``);
+const todosStore = useTodosStore();
 
 const onAddTodo = () => {
   const value = title.value.trim();
   if (!value) return;
-  emits(`addTodo`, value);
+
+  todosStore.addTodo(value);
   title.value = "";
 };
+
 </script>
 
 <template>
@@ -29,17 +33,6 @@ const onAddTodo = () => {
 </template>
 
 <style scoped>
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  border: 0;
-}
-
 .todo-form__input {
   flex: 1;
   min-width: 0;
@@ -95,3 +88,4 @@ const onAddTodo = () => {
   align-items: center;
 }
 </style>
+
