@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
 import Todoitem from "@/components/TodoItem.vue";
 import TodoAddItem from "@/components/TodoAddItem.vue";
@@ -12,7 +12,7 @@ const { isLoading, newTodos, doneTodos } = storeToRefs(todosStore);
 
 const router = useRouter();
 
-const navigateToDetail = (id) => {
+const navigateToDetail = (id: number) => {
   router.push({ path: `/todo/${id}` });
 };
 onMounted(() => {
@@ -103,60 +103,42 @@ const isSmallWidth = useSmallWidth();
   0%,
   10% {
     transform: translate(0) scale(1);
-    box-shadow:
-      60px 0,
-      60px 0;
+    box-shadow: 60px 0, 60px 0;
   }
   20%,
   40% {
     transform: translate(20px) scale(1);
-    box-shadow:
-      60px 0,
-      60px 0;
+    box-shadow: 60px 0, 60px 0;
   }
   48% {
     transform: translate(20px) scale(1);
-    box-shadow:
-      8px 0,
-      60px 0;
+    box-shadow: 8px 0, 60px 0;
   }
   50% {
     transform: translate(20px) scale(1.5);
-    box-shadow:
-      0 0,
-      60px 0;
+    box-shadow: 0 0, 60px 0;
   }
   58% {
     transform: translate(20px) scale(1.5);
-    box-shadow:
-      0 0,
-      8px 0;
+    box-shadow: 0 0, 8px 0;
   }
   60%,
   70% {
     transform: translate(20px) scale(2);
-    box-shadow:
-      0 0,
-      0 0;
+    box-shadow: 0 0, 0 0;
   }
 
   85% {
     transform: translate(-50px) scale(2);
-    box-shadow:
-      0 0,
-      0 0;
+    box-shadow: 0 0, 0 0;
   }
   87% {
     transform: translate(-50px) scale(1);
-    box-shadow:
-      0 0,
-      0 0;
+    box-shadow: 0 0, 0 0;
   }
   100% {
     transform: translate(0) scale(1);
-    box-shadow:
-      0 0,
-      0 0;
+    box-shadow: 0 0, 0 0;
   }
 }
 @keyframes l10-2 {
@@ -217,9 +199,7 @@ h2 {
   transform: rotateY(360deg);
 }
 .todo-enter-active {
-  transition:
-    transform 450ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    opacity 450ms ease;
+  transition: transform 450ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 450ms ease;
 }
 
 .todo-enter-from {
@@ -228,9 +208,7 @@ h2 {
 }
 
 .todo-enter-active {
-  transition:
-    transform 2s cubic-bezier(0.2, 0.8, 0.2, 1),
-    opacity 450ms ease;
+  transition: transform 2s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 450ms ease;
 }
 
 .todo-enter-from {

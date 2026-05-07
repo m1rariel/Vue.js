@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
@@ -12,7 +12,12 @@ const { currentTodo: todo, isDetailLoading: isLoading } =
   storeToRefs(todosStore);
 
 onMounted(() => {
-  todosStore.fetchOneTodo(route.params.id);
+  const rawId = Array.isArray(route.params.id)
+    ? route.params.id[0]
+    : route.params.id;
+  const todoId = Number(rawId);
+
+  todosStore.fetchOneTodo(todoId);
 });
 </script>
 
@@ -82,60 +87,42 @@ onMounted(() => {
   0%,
   10% {
     transform: translate(0) scale(1);
-    box-shadow:
-      60px 0,
-      60px 0;
+    box-shadow: 60px 0, 60px 0;
   }
   20%,
   40% {
     transform: translate(20px) scale(1);
-    box-shadow:
-      60px 0,
-      60px 0;
+    box-shadow: 60px 0, 60px 0;
   }
   48% {
     transform: translate(20px) scale(1);
-    box-shadow:
-      8px 0,
-      60px 0;
+    box-shadow: 8px 0, 60px 0;
   }
   50% {
     transform: translate(20px) scale(1.5);
-    box-shadow:
-      0 0,
-      60px 0;
+    box-shadow: 0 0, 60px 0;
   }
   58% {
     transform: translate(20px) scale(1.5);
-    box-shadow:
-      0 0,
-      8px 0;
+    box-shadow: 0 0, 8px 0;
   }
   60%,
   70% {
     transform: translate(20px) scale(2);
-    box-shadow:
-      0 0,
-      0 0;
+    box-shadow: 0 0, 0 0;
   }
 
   85% {
     transform: translate(-50px) scale(2);
-    box-shadow:
-      0 0,
-      0 0;
+    box-shadow: 0 0, 0 0;
   }
   87% {
     transform: translate(-50px) scale(1);
-    box-shadow:
-      0 0,
-      0 0;
+    box-shadow: 0 0, 0 0;
   }
   100% {
     transform: translate(0) scale(1);
-    box-shadow:
-      0 0,
-      0 0;
+    box-shadow: 0 0, 0 0;
   }
 }
 @keyframes l10-2 {

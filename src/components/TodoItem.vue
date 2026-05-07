@@ -1,17 +1,19 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue";
 import IconDone from "./icons/IconDone.vue";
 import IconTrash from "./icons/IconTrash.vue";
 import { useTodosStore } from "@/store/todosStore";
+import type { Todo } from "@/types/todo";
 
-const props = defineProps({
-  todo: {
-    type: Object,
-    required: true,
-  },
-});
-const emits = defineEmits([`navigateToDetail`]);
-const onNavigateToDetail = (id) => {
+const props = defineProps<{
+  todo: Todo;
+}>();
+
+const emits = defineEmits<{
+  (e: `navigateToDetail`, value: number): void;
+}>();
+
+const onNavigateToDetail = (id: number) => {
   emits(`navigateToDetail`, props.todo.id);
 };
 
