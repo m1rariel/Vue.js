@@ -1,10 +1,14 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import IconPlus from "./icons/IconPlus.vue";
 import { useTodosStore } from "@/store/todosStore";
+import { Todo } from "@/types/todo";
 
-const emits = defineEmits([`addTodo`]);
-const title = ref(``);
+const emits = defineEmits<{
+  (e: `addTodo`, title: string): void;
+}>();
+
+const title = ref<string>(``);
 const todosStore = useTodosStore();
 
 const onAddTodo = () => {
@@ -14,7 +18,6 @@ const onAddTodo = () => {
   todosStore.addTodo(value);
   title.value = "";
 };
-
 </script>
 
 <template>
@@ -26,7 +29,7 @@ const onAddTodo = () => {
       placeholder="Add new a tasks"
       type="text"
     />
-    <button type="submit" class="todo-form__button" @submit="onAddTodo">
+    <button type="submit" class="todo-form__button">
       <IconPlus />
     </button>
   </form>
@@ -88,4 +91,3 @@ const onAddTodo = () => {
   align-items: center;
 }
 </style>
-

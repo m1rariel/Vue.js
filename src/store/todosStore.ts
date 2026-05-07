@@ -2,14 +2,15 @@ import { getTodos } from "@/api/todo/getTodos";
 import { getTodo } from "@/api/todo/getTodo";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
+import { Todo } from "@/types/todo";
 
 export const useTodosStore = defineStore("todos", () => {
-  const todos = ref([]);
+  const todos = ref<Todo[]>([]);
   const isLoading = ref(true);
-  const currentTodo = ref(null);
+  const currentTodo = ref<Todo | null>(null);
   const isDetailLoading = ref(true);
-  
-  function addTodo(title) {
+
+  function addTodo(title: string): void {
     todos.value.push({
       id: Date.now(),
       title,
@@ -17,28 +18,27 @@ export const useTodosStore = defineStore("todos", () => {
     });
   }
 
-  async function fetchTodos() {
+  async function fetchTodos(): Promise<void> {
     isLoading.value = true;
 
     try {
-      const rawTodos = await getTodos();
+      const rawTodos: Todo[] = await getTodos();
       todos.value = rawTodos.map((todo) => ({
         ...todo,
         completed: false,
       }));
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Error!!!", error);
     } finally {
       isLoading.value = false;
     }
   }
 
-  async function fetchOneTodo(id) {
+  async function fetchOneTodo(id: number): Promise<void> {
     isDetailLoading.value = true;
-
     try {
       currentTodo.value = await getTodo(id);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Error!", error);
       currentTodo.value = null;
     } finally {
@@ -46,14 +46,14 @@ export const useTodosStore = defineStore("todos", () => {
     }
   }
 
-  const doneTodos = computed(() => {
+  const doneTodos = computed<Todo[]>(() => {
     return todos.value.filter((todo) => todo.completed);
   });
-  const newTodos = computed(() => {
+  const newTodos = computed<Todo[]>(() => {
     return todos.value.filter((todo) => !todo.completed);
   });
 
-  const deleteTodo = (id) => {
+  const deleteTodo = (id: number): void => {
     todos.value = todos.value.filter((todo) => todo.id !== id);
   };
 
