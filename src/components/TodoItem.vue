@@ -13,7 +13,7 @@ const emits = defineEmits<{
   (e: `navigateToDetail`, value: number): void;
 }>();
 
-const onNavigateToDetail = (id: number) => {
+const onNavigateToDetail = (e: MouseEvent) => {
   emits(`navigateToDetail`, props.todo.id);
 };
 
@@ -23,8 +23,8 @@ const todoLink = computed(() => ({
   path: `/todo/${props.todo.id}`,
   query: {
     title: props.todo.title,
-    id: props.todo.id,
-    completed: props.todo.completed,
+    id: String(props.todo.id),
+    completed: String(props.todo.completed),
   },
 }));
 </script>

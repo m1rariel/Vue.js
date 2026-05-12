@@ -11,6 +11,7 @@ const todosStore = useTodosStore();
 const { currentTodo: todo, isDetailLoading: isLoading } =
   storeToRefs(todosStore);
 
+
 onMounted(() => {
   const rawId = Array.isArray(route.params.id)
     ? route.params.id[0]
