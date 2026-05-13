@@ -10,7 +10,7 @@ export const useTodosStore = defineStore("todos", () => {
   const currentTodo = ref<Todo | null>(null);
   const isDetailLoading = ref(true);
 
-  function addTodo(title: string): void {
+  function addTodo(title: string) {
     todos.value.push({
       id: Date.now(),
       title,
@@ -18,11 +18,11 @@ export const useTodosStore = defineStore("todos", () => {
     });
   }
 
-  async function fetchTodos(): Promise<void> {
+  async function fetchTodos() {
     isLoading.value = true;
 
     try {
-      const rawTodos: Todo[] = await getTodos();
+      const rawTodos = await getTodos();
       todos.value = rawTodos.map((todo) => ({
         ...todo,
         completed: false,
@@ -34,7 +34,7 @@ export const useTodosStore = defineStore("todos", () => {
     }
   }
 
-  async function fetchOneTodo(id: number): Promise<void> {
+  async function fetchOneTodo(id: number) {
     isDetailLoading.value = true;
     try {
       currentTodo.value = await getTodo(id);
@@ -53,7 +53,7 @@ export const useTodosStore = defineStore("todos", () => {
     return todos.value.filter((todo) => !todo.completed);
   });
 
-  const deleteTodo = (id: number): void => {
+  const deleteTodo = (id: number) => {
     todos.value = todos.value.filter((todo) => todo.id !== id);
   };
 

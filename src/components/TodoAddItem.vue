@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import IconPlus from "./icons/IconPlus.vue";
 import { useTodosStore } from "@/store/todosStore";
-import { Todo } from "@/types/todo";
+
 
 const emits = defineEmits<{
   (e: `addTodo`, title: string): void;
